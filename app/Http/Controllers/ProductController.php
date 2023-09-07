@@ -17,14 +17,22 @@ class ProductController extends Controller
 
         $query = Product::query();
         
+        
         $keyword = $request->input('keyword');
+        $select = $request->input('select');
+        
+        if ($request->filled('company_name')) {
+            $query->whereHas('company', function($query) use ($request) {
+                $query->where('company_name', $request->input('company_name'));
+            });
+        }
 
         if(!empty($keyword))
         {
             $query->where('product_name','like',"%{$keyword}%");
-            $query->orWhere('company_id','like',"%{$keyword}%");
             
         }
+
 
         $product = $query->orderBy('created_at', 'desc')->get();
         $companies = Company::all();
@@ -39,6 +47,7 @@ class ProductController extends Controller
         $companies = Company::all();
         return view('products.create', compact('companies'));
     }
+
     //商品を登録する
     public function store(Request $request)
     {
@@ -114,17 +123,10 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        DB::beginTransaction();
-
-        try {
-            $product->delete();
-            DB::commit();
-
-            return response()->json(['success' => config('messages.deleted')]);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => config('messages.delete_error')]);
-        }
+           $product->delete(); 
+           
+           return redirect(route('products.index'));
+        
     }
 
 

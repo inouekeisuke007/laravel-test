@@ -9,7 +9,16 @@
 
   @csrf
     <div class="form-group">
-        <input type="text" name="keyword" class="form-control" value="{{$keyword}}" placeholder="会社名や商品名">
+    <select name="company_name" id="company_name">
+            <option value="">--選択してください--</option>
+            @foreach($companies as $company)
+              <option value="{{ $company->company_name }}"{{ request('company_name') == $company->company_name?'selected':'' }}>{{ $company->company_name }}
+              </option>
+            @endforeach
+          </select>
+    </div>
+    <div class="form-group">
+        <input type="text" name="keyword" class="form-control" value="{{$keyword}}" placeholder="商品名">
     </div>
     <div class="form-group">
         <input type="submit" value="検索" class="btn btn-info" >

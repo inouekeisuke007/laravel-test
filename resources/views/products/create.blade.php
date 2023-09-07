@@ -9,10 +9,10 @@
         @csrf
 
         <div class="form-group row">
-          <label for="product_name">商品名</label>
-          <input id="product_name" type="text" class="form-control @error('product_name') is-invalid @enderror" name="product_name" value="{{ old('product_name') }}" required autocomplete="product_name" autofocus>
+          <label for="image_path">商品画像</label>
+          <input type="file" name="image_path" class="form-control @error('image_path') is-invalid @enderror">
 
-          @error('product_name')
+          @error('image_path')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
@@ -20,13 +20,24 @@
         </div>
 
         <div class="form-group row">
-          <label for="company_id">メーカー</label>
+          <label for="company_id">会社名</label>
           <select name="company_id" id="company_id" class="form-control @error('company_id') is-invalid @enderror" name="company_id" value="{{ old('company_id') }}" required autocomplete="company_id" autofocus>
             @foreach($companies as $company)
               <option value="{{ $company->id }}">{{ $company->company_name }}</option>
             @endforeach
           </select>
           @error('company_id')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+          @enderror
+        </div>
+        
+        <div class="form-group row">
+          <label for="product_name">商品名</label>
+          <input id="product_name" type="text" class="form-control @error('product_name') is-invalid @enderror" name="product_name" value="{{ old('product_name') }}" required autocomplete="product_name" autofocus>
+
+          @error('product_name')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
@@ -58,17 +69,6 @@
         <div class="form-group row">
           <label for="comment">コメント</label>
           <textarea name="comment" id="comment"></textarea>
-        </div>
-
-        <div class="form-group row">
-          <label for="image_path">商品画像</label>
-          <input type="file" name="image_path" class="form-control @error('image_path') is-invalid @enderror">
-
-          @error('image_path')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-          @enderror
         </div>
 
         <br>

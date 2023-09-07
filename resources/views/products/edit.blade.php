@@ -12,8 +12,13 @@
       </p>
 
       <p>
-        <label for="product_name">商品名</label>
-        <input type="text" name="product_name" id="name" value="{{ $product->name }}">
+        <label for="image_path">商品画像</label>
+        <input type="file" name="image_path" id="image_path" accept="image/*">
+        @if ($product->image_path)
+          <div>
+            <img src="{{ asset('storage/' . $product->image_path) }}" alt="商品画像" style="max-width: 200px;">
+          </div>
+        @endif
       </p>
 
       <p>
@@ -23,6 +28,11 @@
               <option value="{{ $company->id }}" {{ $product->company_id == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
             @endforeach
         </select>
+      </p>
+
+      <p>
+        <label for="product_name">商品名</label>
+        <input type="text" name="product_name" id="name" value="{{ $product->product_name}}">
       </p>
 
       <p>
@@ -38,16 +48,6 @@
       <p>
         <label for="comment">コメント</label>
         <input type="text" name="comment" id="comment" value="{{ $product->comment }}">
-      </p>
-
-      <p>
-        <label for="image_path">商品画像</label>
-        <input type="file" name="image_path" id="image_path" accept="image/*">
-        @if ($product->image_path)
-          <div>
-            <img src="{{ asset('storage/' . $product->image_path) }}" alt="商品画像" style="max-width: 200px;">
-          </div>
-        @endif
       </p>
 
       @if($errors->any())
