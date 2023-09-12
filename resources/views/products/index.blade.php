@@ -17,6 +17,7 @@
             @endforeach
           </select>
     </div>
+    
     <div class="form-group">
         <input type="text" name="keyword" class="form-control" value="{{$keyword}}" placeholder="商品名">
     </div>

@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         try {
             $validatedData = $request->validate([
-                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif',
                 'company_id' => 'required',
                 'product_name' => 'required|max:255',
                 'price' => 'required|numeric',
@@ -94,7 +94,7 @@ class ProductController extends Controller
 
         try {
             $rules = [
-                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif',
                 'company_id' => 'required',
                 'product_name' => 'required|max:255',
                 'price' => 'required|numeric',
