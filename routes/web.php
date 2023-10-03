@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductsController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ Route::get('/products/{product}/edit', 'ProductController@edit')->name('products
 //商品更新処理のルート
 Route::put('/products/{product}', 'ProductController@update')->name('products.update');
 //商品削除処理のルート
-Route::delete('/products/{product}', 'ProductController@destroy')->name('products.destroy');
+Route::delete('/products/{product}', 'ProductsController@destroy')->name('products.destroy');
 
 Auth::routes();
 

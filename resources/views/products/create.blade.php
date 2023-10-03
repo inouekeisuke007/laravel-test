@@ -10,6 +10,7 @@
 
         <div class="form-group row">
           <label for="image_path">商品画像</label>
+
           <input type="file" name="image_path" class="form-control @error('image_path') is-invalid @enderror">
 
           @error('image_path')

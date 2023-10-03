@@ -1,76 +1,79 @@
 @extends('layouts.app')
 
 @section('content')
-<div class='max-w-6xl mx-auto'>
-    <div class='text-right m-2 p-2'>
-    </div>
-    <div>
-  <form action="{{ route('products.index') }}" method="GET">
-
-  @csrf
-    <div class="form-group">
-    <select name="company_name" id="company_name">
+  <div class="container">
+    <div class="search-form">
+      <form id="search-form" action="{{ route('products.index') }}" method="GET">
+        <div class="form-group">
+          <label for="product_name">商品名</label>
+          <input type="text" name="product_name" id="product_name" value="{{ request('product_name') }}">
+        </div>
+        <div class="form-group">
+          <label for="company_name">メーカー名</label>
+          <select name="company_name" id="company_name">
             <option value="">--選択してください--</option>
             @foreach($companies as $company)
               <option value="{{ $company->company_name }}"{{ request('company_name') == $company->company_name?'selected':'' }}>{{ $company->company_name }}
               </option>
             @endforeach
           </select>
+        </div>
+        <div class="form-group">
+          <label for="price_min">価格(下限)</label>
+          <input type="number" name="price_min" id="price_min" value="{{ request('price_min') }}" min="0">
+        </div>
+        <div class="form-group">
+          <label for="price_max">価格(上限)</label>
+          <input type="number" name="price_max" id="price_max" value="{{ request('price_max') }}" min="0">
+        </div>
+        <div class="form-group">
+          <label for="stock_min">在庫数(下限)</label>
+          <input type="number" name="stock_min" id="stock_min" value="{{ request('stock_min') }}" min="0">
+        </div>
+        <div class="form-group">
+          <label for="stock_max">在庫数(上限)</label>
+          <input type="number" name="stock_max" id="stock_max" value="{{ request('stock_max') }}" min="0">
+        </div>
+        <button type="submit">検索</button>
+      </form>
     </div>
-    
-    <div class="form-group">
-        <input type="text" name="keyword" class="form-control" value="{{$keyword}}" placeholder="商品名">
+    <h1>商品一覧画面</h1>
+    <div class="products_list">
+      <table id="products-table">
+        @csrf
+        <thead>
+          <tr>
+            <th>商品画像</th>
+            <th><a href="{{ route('products.index', array_merge(request()->query(), ['sort' => 'company_id', 'order' => $sort === 'company_id' && $order === 'asc' ? 'desc' : 'asc'])) }}">メーカー</a></th>
+            <th><a href="{{ route('products.index', array_merge(request()->query(), ['sort' => 'name', 'order' => $sort === 'name' && $order === 'asc' ? 'desc' : 'asc'])) }}">商品名</a></th>
+            <th><a href="{{ route('products.index', array_merge(request()->query(), ['sort' => 'price', 'order' => $sort === 'price' && $order === 'asc' ? 'desc' : 'asc'])) }}">値段</a></th>
+            <th><a href="{{ route('products.index', array_merge(request()->query(), ['sort' => 'stock', 'order' => $sort === 'stock' && $order === 'asc' ? 'desc' : 'asc'])) }}">在庫</a></th>
+            <th>コメント</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach ($product as $product)
+          <tr data-id="{{ $product->id }}">
+            <td><img src="{{ asset('storage/' . $product->image_path) }}" alt="商品画像" style="max-width: 200px;"></td>
+            <td>{{ $product->company->company_name }}</td>
+            <td><a href="{{ route('products.show', $product) }}">{{ $product->product_name }}</a></td>
+            <td>{{ $product->price }}円</td>
+            <td>{{ $product->stock }}</td>
+            <td>{{ $product->comment }}</td>
+            <td>
+              <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="event.preventDefault(); confirmDelete(this);">
+                @csrf
+                @method('DELETE')
+                <a href="{{ route('products.show',$product->id) }}">閲覧</a>
+                <a href="{{ route('products.edit',$product->id) }}">編集</a>
+                <button type="submit" class="btn btn-danger delete-btn">削除</button>
+              </form>
+            </td>
+          </tr>
+        @endforeach
+        </tbody>
+      </table>
     </div>
-    <div class="form-group">
-        <input type="submit" value="検索" class="btn btn-info" >
-    </div>
-   </form>
-</div>
-
-    <a href="{{ route('products.create') }}">登録</a>
-
-    <div class="m-2 p-2">
-        <table class="w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="p-4 text-gray-500 text-left">Id</th>
-                    <th class="p-4 text-gray-500 text-left">商品画像</th>
-                    <th class="p-4 text-gray-500 text-left">会社名</th>
-                    <th class="p-4 text-gray-500 text-left">商品名</th>
-                    <th class="p-4 text-gray-500 text-left">価格</th>
-                    <th class="p-4 text-gray-500 text-left">在庫</th>
-                    <th class="p-4 text-gray-500 text-right">詳細</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach($product as $product)
-                <tr>
-                    <td class="p-4 whitespace-nowrap">{{ $product->id }}</td>
-                    <td class="p-4 whitespace-nowrap">
-                        <img class="w-12 h-9 rounded" src="{{ Storage::url($product->image) }}" />
-                    </td>
-                    <td class="p-4 whitespace-nowrap">{{ $product->company->company_name }}</td>
-                    <td class="p-4 whitespace-nowrap">{{ $product->product_name }}</td>
-                    <td class="p-4 whitespace-nowrap">{{ $product->price }}</td>
-                    <td class="p-4 whitespace-nowrap">{{ $product->stock }}</td>
-                    <td class="p-4 whitespace-nowrap">{!! nl2br($product->comment) !!}</td>
-                    <td class="p-4 text-right text-sm">
-                    <td>
-                        <form action="{{ route('products.destroy',$product->id) }}" method="POST">
-                            <a href="{{ route('products.show',$product->id) }}">閲覧</a>
-                            <a href="{{ route('products.edit',$product->id) }}">編集</a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger delete-btn">削除</button>
-                        </form>
-                    </td>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    
-</div>
-
+    <a href="{{ route('products.create') }}">商品を登録する</a>
+  </div>
 @endsection

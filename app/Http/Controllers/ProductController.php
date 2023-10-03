@@ -16,10 +16,12 @@ class ProductController extends Controller
     {
 
         $query = Product::query();
-        
+
         
         $keyword = $request->input('keyword');
         $select = $request->input('select');
+        $sort = $request->input('sort', 'id');
+        $order = $request->input('order', 'desc');
         
         if ($request->filled('company_name')) {
             $query->whereHas('company', function($query) use ($request) {
@@ -33,11 +35,18 @@ class ProductController extends Controller
             
         }
 
+        if ($request->filled('price_min') && $request->filled('price_max')) {
+            $query->whereBetween('price', [$request->input('price_min'), $request->input('price_max')]);
+        }
 
-        $product = $query->orderBy('created_at', 'desc')->get();
+        if ($request->filled('stock_min') && $request->filled('stock_max')) {
+            $query->whereBetween('stock', [$request->input('stock_min'), $request->input('stock_max')]);
+        }
+
+        $product = $query->orderBy($sort, $order)->get();
         $companies = Company::all();
 
-        return view('products.index', compact('keyword','product','companies'));
+        return view('products.index', compact('keyword', 'product', 'products', 'companies', 'sort', 'order'));
 
     }
 
@@ -123,10 +132,17 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-           $product->delete(); 
-           
-           return redirect(route('products.index'));
-        
+        DB::beginTransaction();
+
+        try {
+            $product->delete();
+            DB::commit();
+
+            return response()->json(['success' => config('messages.deleted')]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => config('messages.delete_error')]);
+        }
     }
 
 
