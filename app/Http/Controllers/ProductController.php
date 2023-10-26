@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\Paginator;
 
 class ProductController extends Controller
 {   
@@ -46,7 +45,7 @@ class ProductController extends Controller
         $product = $query->orderBy($sort, $order)->get();
         $companies = Company::all();
 
-        return view('products.index', compact('keyword', 'product', 'products', 'companies', 'sort', 'order'));
+        return view('products.index', compact('keyword', 'product', 'companies', 'sort', 'order'));
 
     }
 

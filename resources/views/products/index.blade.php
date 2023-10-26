@@ -54,7 +54,9 @@
         <tbody>
         @foreach ($product as $product)
           <tr data-id="{{ $product->id }}">
-            <td><img src="{{ asset('storage/' . $product->image_path) }}" alt="商品画像" style="max-width: 200px;"></td>
+          <td class="p-4 whitespace-nowrap">
+             <img class="w-12 h-9 rounded" src="{{ Storage::url($product->image) }}" />
+            </td>
             <td>{{ $product->company->company_name }}</td>
             <td><a href="{{ route('products.show', $product) }}">{{ $product->product_name }}</a></td>
             <td>{{ $product->price }}円</td>

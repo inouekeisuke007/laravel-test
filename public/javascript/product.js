@@ -35,8 +35,8 @@ $(document).ready(function() {
           var productListArray = [];
   
           products.each(function() {
-            var company = $(this).find('td:nth-child(1)').text();
-            var image = $(this).find('td:nth-child(2) img').attr('src');
+            var image = $(this).find('td:nth-child(1) img').attr('src'); 
+            var company = $(this).find('td:nth-child(2)').text();
             var name = $(this).find('td:nth-child(3) a').text();
             var price = $(this).find('td:nth-child(4)').text();
             var stock = $(this).find('td:nth-child(5)').text();
@@ -64,8 +64,8 @@ $(document).ready(function() {
             var url = 'products/' + product.id;
             var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             var html = '<tr data-id="' + product.id + '">' +
-              '<td>' + product.company + '</td>' +
               '<td><img src="' + product.image + '" alt="商品画像" style="max-width: 200px;"></td>' +
+              '<td>' + product.company + '</td>' +
               '<td><a href="' + product.url + '">' + product.name + '</a></td>' +
               '<td>' + product.price + '</td>' +
               '<td>' + product.stock + '</td>' +
